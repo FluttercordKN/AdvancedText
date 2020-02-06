@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AdvancedText": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\ryuji\\Desktop\\TestTextCatalog C:\\Users\\ryuji\\Desktop\\report.txt"
+    }
+  }
+}
