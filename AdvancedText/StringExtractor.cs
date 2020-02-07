@@ -44,6 +44,8 @@ namespace AdvancedText
 									state = ReadState.End;
 								}
 							}
+							else
+								beginMatchDegree = 0;
 							break;
 						case ReadState.End:
 							midResultvalue.Add(current);
@@ -57,6 +59,8 @@ namespace AdvancedText
 									midResultvalue.Clear();
 								}
 							}
+							else
+								endMatchDegree = 0;
 							break;
 						default:
 							break;

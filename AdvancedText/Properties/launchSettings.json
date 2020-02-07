@@ -2,7 +2,7 @@
   "profiles": {
     "AdvancedText": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\ryuji\\Desktop\\TestTextCatalog C:\\Users\\ryuji\\Desktop\\report.txt"
+      "commandLineArgs": "C:\\Users\\dev01\\Documents\\GitHub\\main\\Application\\Knoema.Application"
     }
   }
 }

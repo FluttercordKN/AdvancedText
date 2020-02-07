@@ -1,0 +1,32 @@
+[
+  {
+    "Extension": ".cshtml",
+    "Begin": "@R(\"",
+    "End": "\""
+  },
+  {
+    "Extension": ".ts",
+    "Begin": "__R('",
+    "End": "')"
+  },
+  {
+    "Extension": ".js",
+    "Begin": "__R('",
+    "End": "')"
+  },
+  {
+    "Extension": ".ts",
+    "Begin": "__R(\"",
+    "End": "\")"
+  },
+  {
+    "Extension": ".js",
+    "Begin": "__R(\"",
+    "End": "\")"
+  },
+  {
+    "Extension": ".htm",
+    "Begin": "__R('",
+    "End": "')"
+  }
+]

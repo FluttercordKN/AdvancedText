@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AdvancedText.Test
 {
@@ -39,6 +40,18 @@ namespace AdvancedText.Test
 
 			var result = instance.Extract(text);
 			Assert.AreEqual(0, result.Length);
+		}
+
+		[TestMethod]
+		public void RealCase()
+		{
+			var instance = new StringExtractor("@R(\"", "\"");
+
+			var text = "< a rel = \"nofollow\" href = \"@Url.Action(\"history\", \"Resource\", new { id = Model.Id, title = Model.Title.NormalizeFormat(true), area = string.Empty })\" id = \"history\" > @R(\"Show history\") </ a > ";
+
+			var result = instance.Extract(text);
+			Assert.AreEqual(1, result.Length);
+			Assert.AreEqual("Show history", result[0]);
 		}
 	}
 }
