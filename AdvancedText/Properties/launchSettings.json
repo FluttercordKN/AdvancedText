@@ -1,8 +1,7 @@
 {
   "profiles": {
     "AdvancedText": {
-      "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\dev01\\Documents\\GitHub\\main\\Application\\Knoema.Application"
+      "commandName": "Project"
     }
   }
 }

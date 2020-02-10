@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 using Newtonsoft.Json;
 
@@ -9,25 +8,51 @@ namespace AdvancedText
 {
 	class Program
 	{
-		private const string RulesFileName = "ExtractRules.json";
-		private const string ReportFileName = "Report.tsv";
+		private const string UsageMessage = "Arguments usage: directory rulesFile resultFile" + "\n\r" +
+			@"Example: C:\temp\Project C:\temp\rules.json C:\temp\result.txt";
 
 		static void Main(string[] args)
 		{
-			if (args.Length != 1)
-				return;
+			if (args.Length == 0)
+			{
+				var directory = ReadValidAgrument("directory", v => $"{v} is invalid value", v => Directory.Exists(v));
+				var rulesFile = ReadValidAgrument("rules file", v => $"{v} is invalid value", v => File.Exists(v));
+				var resultFile = ReadValidAgrument("result file", v => $"{v} is invalid value", v => true);
+				Execute(directory, rulesFile, resultFile);
+			}
+			else if (args.Length == 3)
+			{
+				Execute(args[0], args[1], args[2]);
+			}
+			else
+			{
+				Console.WriteLine(UsageMessage);
+			}
+			Console.WriteLine("Done");
+			Console.ReadKey();
+		}
 
-			var sourceDirectory = args[0];
-			if (!Directory.Exists(sourceDirectory))
-				return;
+		private static string ReadValidAgrument(string argumentName, Func<string, string> errorMessage, Func<string, bool> validator)
+		{
+			Console.WriteLine($"Enter {argumentName}:");
+			var value = Console.ReadLine();
+			while (!validator(value))
+			{
+				Console.WriteLine(errorMessage(value));
+				Console.WriteLine($"Enter {argumentName}:");
+				value = Console.ReadLine();
+			}
+			return value;
+		}
 
+		private static void Execute(string directory, string rulesFile, string resultFile)
+		{
 			try
 			{
-				var executingAssemblyFolder = Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName;
-				var rules = JsonConvert.DeserializeObject<ExtractRule[]>(File.ReadAllText(Path.Combine(executingAssemblyFolder, RulesFileName)));
-				var extractors = rules.Select(r => new { r.Extension, Extractor = new StringExtractor(r.Begin, r.End)}).ToLookup(e => e.Extension, e => e.Extractor);
-				using (var writer = File.CreateText(Path.Combine(executingAssemblyFolder, ReportFileName)))
-					foreach (var filePath in rules.Select(e => $"*{e.Extension}").Distinct().SelectMany(ext => Directory.EnumerateFiles(sourceDirectory, ext, SearchOption.AllDirectories)))
+				var rules = JsonConvert.DeserializeObject<ExtractRule[]>(File.ReadAllText(rulesFile));
+				var extractors = rules.Select(r => new { r.Extension, Extractor = new StringExtractor(r.Begin, r.End) }).ToLookup(e => e.Extension, e => e.Extractor);
+				using (var writer = File.CreateText(resultFile))
+					foreach (var filePath in rules.Select(e => $"*{e.Extension}").Distinct().SelectMany(ext => Directory.EnumerateFiles(directory, ext, SearchOption.AllDirectories)))
 					{
 						var fileExtension = new FileInfo(filePath).Extension;
 						var lineNumber = 0;
@@ -39,13 +64,12 @@ namespace AdvancedText
 									writer.WriteLine($"{filePath}:{lineNumber}\t{item}");
 						}
 					}
-				Console.WriteLine("Done");
-				Console.ReadKey();
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"{e.Message}{Environment.NewLine}{e.StackTrace}");
-				Console.ReadKey();
+				Console.WriteLine(e.Message);
+				Console.WriteLine(e.StackTrace);
+				throw;
 			}
 		}
 	}
